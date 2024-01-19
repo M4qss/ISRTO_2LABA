@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VASILIEV_ISRPO_LABA2Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="CLIENTS">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FIO" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="PHONE_NUMBER" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AGE" Type="Int32" />
+    <NavigationProperty Name="ROOMS_CLIENTS" Relationship="Self.FK__ROOMS_CLI__CLIEN__3B75D760" FromRole="CLIENTS" ToRole="ROOMS_CLIENTS" />
+  </EntityType>
+  <EntityType Name="ROOM">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BEDS" Type="Int32" />
+    <Property Name="FLOOR" Type="Int32" />
+    <Property Name="CLASS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="ROOMS_CLIENTS" Relationship="Self.FK__ROOMS_CLI__ROOM___3A81B327" FromRole="ROOM" ToRole="ROOMS_CLIENTS" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="ROOMS_CLIENTS">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ROOM_ID" Type="Int32" />
+    <Property Name="CLIENT_ID" Type="Int32" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="CLIENTS" Relationship="Self.FK__ROOMS_CLI__CLIEN__3B75D760" FromRole="ROOMS_CLIENTS" ToRole="CLIENTS" />
+    <NavigationProperty Name="ROOM" Relationship="Self.FK__ROOMS_CLI__ROOM___3A81B327" FromRole="ROOMS_CLIENTS" ToRole="ROOM" />
+  </EntityType>
+  <Association Name="FK__ROOMS_CLI__CLIEN__3B75D760">
+    <End Role="CLIENTS" Type="Self.CLIENTS" Multiplicity="0..1" />
+    <End Role="ROOMS_CLIENTS" Type="Self.ROOMS_CLIENTS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CLIENTS">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ROOMS_CLIENTS">
+        <PropertyRef Name="CLIENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ROOMS_CLI__ROOM___3A81B327">
+    <End Role="ROOM" Type="Self.ROOM" Multiplicity="0..1" />
+    <End Role="ROOMS_CLIENTS" Type="Self.ROOMS_CLIENTS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ROOM">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ROOMS_CLIENTS">
+        <PropertyRef Name="ROOM_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CLIENTS" EntityType="Self.CLIENTS" />
+    <EntitySet Name="ROOM" EntityType="Self.ROOM" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="ROOMS_CLIENTS" EntityType="Self.ROOMS_CLIENTS" />
+    <AssociationSet Name="FK__ROOMS_CLI__CLIEN__3B75D760" Association="Self.FK__ROOMS_CLI__CLIEN__3B75D760">
+      <End Role="CLIENTS" EntitySet="CLIENTS" />
+      <End Role="ROOMS_CLIENTS" EntitySet="ROOMS_CLIENTS" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ROOMS_CLI__ROOM___3A81B327" Association="Self.FK__ROOMS_CLI__ROOM___3A81B327">
+      <End Role="ROOM" EntitySet="ROOM" />
+      <End Role="ROOMS_CLIENTS" EntitySet="ROOMS_CLIENTS" />
+    </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(VASILIEV_ISRPO_LABA2Model.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(VASILIEV_ISRPO_LABA2Model.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+</Schema>
